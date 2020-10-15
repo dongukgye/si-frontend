@@ -4,4 +4,6 @@ import router from './router'
 import store from './store'
 import '@/assets/css/tailwind.css'
 
-createApp(App).use(store).use(router).mount('#app')
+import DashboardLayout from '@/layouts/DashboardLayout.vue'
+
+createApp(App).component("default-layout", DashboardLayout).use(store).use(router).mount('#app')
