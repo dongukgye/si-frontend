@@ -13,4 +13,10 @@ class AuthService {
         }
         return httpClient.post<any>(params)
     }
+
+    logout() {
+        localStorage.removeItem('accessToken')
+    }
 }
+
+export default new AuthService()
