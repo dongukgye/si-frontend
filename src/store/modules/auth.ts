@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import AuthService from "@/services/authService"
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { IUser, IUserInfoWithToken } from "@/services/interfase"
+import { IUser, IUserInfoWithToken } from "@/services/core/interfase"
 
 @Module
 export default class Auth extends VuexModule {
