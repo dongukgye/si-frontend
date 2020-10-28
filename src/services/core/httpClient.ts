@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios'
-import { IHttpClient, IHttpClientRequestParameters } from '@/services/interfase'
+import { IHttpClient, IHttpClientRequestParameters } from '@/services/core/interfase'
 
 class HttpClient implements IHttpClient {
 

@@ -19,7 +19,7 @@ export interface IUserInfoWithToken {
 export interface IHttpClientRequestParameters {
     url: string
     requiresToken: boolean
-    payload?: T
+    payload?: any
 }
 
 export interface IHttpClient {
