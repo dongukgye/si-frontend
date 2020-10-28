@@ -3,7 +3,7 @@ import AuthService from "@/services/authService"
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { IUser, IUserInfoWithToken } from "@/services/interfase"
 
-@Module({ namespaced: true, name: 'auth' })
+@Module
 export default class Auth extends VuexModule {
     token: string = localStorage.getItem('accessToken') || ''
     userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
@@ -42,18 +42,16 @@ export default class Auth extends VuexModule {
     }
 
     @Action
-    login(user: IUser) {
-        return AuthService.login(user).then(
-            (data: IUserInfoWithToken) => {
-                this.context.commit('loginSuccess', data)
-                Axios.defaults.headers.common['Authorization'] = 'JWT ' + data.token
-                return Promise.resolve(data.token)
-            },
-            (error: any) => {
-                this.context.commit('loginFailure')
-                return Promise.reject(error)
-            }
-        )
+    async login(user: IUser) {
+        try {
+            const data: IUserInfoWithToken = await AuthService.login(user)
+            Axios.defaults.headers.common['Authorization'] = 'JWT ' + data.token
+            this.context.commit('loginSuccess', data)
+            return Promise.resolve(data.token)
+        } catch (error) {
+            this.context.commit('loginFailure')
+            return Promise.reject(error)
+        }
     }
 
     @Action
