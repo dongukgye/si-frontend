@@ -1,6 +1,7 @@
 import httpClient from '@/services/core/httpClient'
 import { IUser, IHttpClientRequestParameters } from '@/services/core/interfase'
 
+
 class AuthService {
     login(user: IUser): any {
         const params: IHttpClientRequestParameters = {
