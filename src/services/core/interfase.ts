@@ -1,5 +1,30 @@
-import { useRoute } from 'vue-router'
+import { Method } from 'axios'
 
+
+/*
+ * HTTP client interfaces
+ */
+export interface IHttpRequest<T> {
+    path: string
+    method: Method
+    payload?: T
+}
+
+export interface IHttpResponse {
+    count: number
+    next: string | null
+    previous: string | null
+    results: any[]
+}
+
+export interface IHttpClient {
+    request<T>(params: IHttpRequest<T>): Promise<T>
+}
+
+
+/*
+ * Auth Interfaces
+ */
 export interface IUser {
     email: string
     password: string
@@ -16,13 +41,24 @@ export interface IUserInfoWithToken {
     user: IUserInfo
 }
 
-export interface IHttpClientRequestParameters {
-    url: string
-    requiresToken: boolean
-    payload?: any
+
+/*
+ * Inventory Interfaces
+ */
+export interface IItemUsage {
+    name: string
 }
 
-export interface IHttpClient {
-    get<T>(parameters: IHttpClientRequestParameters): Promise<T>
-    post<T>(parameters: IHttpClientRequestParameters): Promise<T>
+export interface IItem {
+    id: number
+    category: number
+    products: Array<IItemUsage>
+    name: string
+    desc: string
+    serial: string
+    quantity: number
+    ideal_quantity: number
+    order_quantity: number
+    created_at: string
+    updated_at: string
 }

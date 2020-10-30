@@ -1,46 +1,28 @@
 import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios'
-import { IHttpClient, IHttpClientRequestParameters } from '@/services/core/interfase'
+import { IHttpClient, IHttpRequest } from '@/services/core/interfase'
+import { resolveComponent } from 'vue'
 
 class HttpClient implements IHttpClient {
 
-    get<T>(parameters: IHttpClientRequestParameters): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
-            const { url, requiresToken } = parameters
+    baseURL = process.env.VUE_APP_API_BASE_URL
 
-            const options: AxiosRequestConfig = {
-                headers: {}
+    request<T>(params: IHttpRequest<T>): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
+            const { path, method, payload } = params
+            const axiosConfig: AxiosRequestConfig = {
+                url: this.baseURL + path,
+                method: method,
+                data: payload
             }
 
-            axios
-                .get(url, options)
-                .then((response: any) => {
+            axios.request(axiosConfig)
+                .then((response: AxiosResponse) => {
                     resolve(response.data as T)
                 })
-                .catch((response: any) => {
+                .catch((response: AxiosError) => {
                     reject(response)
                 })
         })
-
-    }
-
-    post<T>(parameters: IHttpClientRequestParameters): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
-            const { url, requiresToken, payload } = parameters
-
-            const options: AxiosRequestConfig = {
-                headers: {}
-            }
-
-            axios
-                .post(url, payload, options)
-                .then((response: any) => {
-                    resolve(response.data as T)
-                })
-                .catch((response: any) => {
-                    reject(response)
-                })
-        })
-
     }
 }
 
