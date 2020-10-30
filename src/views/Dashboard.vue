@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { ref, defineComponent } from "vue";
-import { IUser } from "@/services/interfase";
+import { IUser } from "@/services/core/interfase";
 import store from "@/store";
 
 export default defineComponent({
