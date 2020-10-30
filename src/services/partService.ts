@@ -1,15 +1,42 @@
 import httpClient from '@/services/core/httpClient'
-import httpCilent from "@/services/core/httpClient"
-import { IUser, IHttpClientRequestParameters } from '@/services/core/interfase'
+import { IHttpRequest, IHttpResponse } from '@/services/core/interfase'
 
+// - TODO: add params for getParts() API
 
 class PartService {
-    getParts(): any {
-        const params: IHttpClientRequestParameters = {
-            url: 'http://localhost:8000/api/v1/inventory/parts/',
-            requiresToken: true
+    getParts(): Promise<IHttpResponse> {
+        const params: IHttpRequest<any> = {
+            path: '/inventory/parts/',
+            method: 'get'
         }
-        return httpClient.get<any>(params)
+        return httpClient.request<IHttpResponse>(params)
+    }
+
+    createPart(data: any): Promise<IHttpResponse> {
+        const params: IHttpRequest<any> = {
+            path: 'inventory/parts/',
+            method: 'post',
+            payload: data
+        }
+        return httpClient.request<IHttpResponse>(params)
+    }
+
+    updatePart(data: any): Promise<IHttpResponse> {
+        const params: IHttpRequest<any> = {
+            path: `inventory/part/${data.id}/`,
+            method: 'put',
+            payload: data
+        }
+        return httpClient.request<IHttpResponse>(params)
+    }
+
+    deletePart(data: any): Promise<IHttpResponse> {
+        const params: IHttpRequest<any> = {
+            path: `inventory/part/${data.id}/`,
+            method: 'delete',
+            payload: data
+        }
+        return httpClient.request<IHttpResponse>(params)
     }
 }
 
