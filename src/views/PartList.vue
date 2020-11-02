@@ -1,7 +1,16 @@
 <template>
   <div>
     <Title title="Part List" />
-    <DataTable :headers="headers" :data="items" selectable>
+    <DataTable
+      :headers="headers"
+      :data="items"
+      :totalCount="totalCount"
+      :pageSize="10"
+      :currentPage="currentPage"
+      @prev-page="gotoPrevPage"
+      @next-page="gotoNextPage"
+      selectable
+    >
       <template v-slot:col_quantity="{ item }">
         <div class="flex items-center">
           <div class="w-2 h-2 mx-2 bg-blue-300 rounded-full"></div>
@@ -39,6 +48,8 @@ export default defineComponent({
   setup() {
     const { isOpenModal } = useModal();
     const items = ref<IItem[]>([]);
+    const currentPage = ref(1);
+    const totalCount = ref(0);
     const headers = ref([
       { text: "Name", value: "name" },
       { text: "Description", value: "desc" },
@@ -53,10 +64,21 @@ export default defineComponent({
       console.log("edit item", item.category);
     }
 
+    function gotoPrevPage() {
+      currentPage.value -= 1;
+      // fetch data
+    }
+
+    function gotoNextPage() {
+      currentPage.value += 1;
+      // fetch data
+    }
+
     onMounted(() => {
       PartService.getParts().then(
         (data) => {
           items.value = data.results;
+          totalCount.value = data.count;
         },
         (err) => {
           console.log(err);
@@ -64,7 +86,16 @@ export default defineComponent({
       );
     });
 
-    return { items, isOpenModal, headers, editItem };
+    return {
+      items,
+      currentPage,
+      totalCount,
+      isOpenModal,
+      headers,
+      editItem,
+      gotoPrevPage,
+      gotoNextPage,
+    };
   },
 });
 </script>
