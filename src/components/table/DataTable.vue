@@ -27,7 +27,11 @@
       <tr>
         <td colspan="100%" class="p-0">
           <div class="px-6 py-3 bg-white">
-            test
+            <Pagination
+              :totalCount="totalCount"
+              :pageSize="pageSize"
+              :currentPage="currentPage"
+            />
           </div>
         </td>
       </tr>
@@ -65,6 +69,7 @@
 
 <script lang="ts">
 import { ref, computed, defineComponent, toRefs, PropType } from "vue";
+import Pagination from "@/components/pagination/Pagination.vue";
 
 export default defineComponent({
   props: {
@@ -84,6 +89,9 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+  },
+  components: {
+    Pagination,
   },
   setup(props, context) {
     const totalPage = computed(() => {
