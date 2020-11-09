@@ -21,7 +21,7 @@
         <div class="fixed inset-0 transition-opacity">
           <div
             :class="isOpenModal ? `block ease-out` : `hidden ease-in`"
-            class="absolute inset-0 bg-gray-500 opacity-75 duration-300 transition"
+            class="absolute inset-0 bg-black opacity-50 duration-300 transition"
           ></div>
         </div>
 
