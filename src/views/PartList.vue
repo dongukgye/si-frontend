@@ -1,32 +1,34 @@
 <template>
   <div>
     <Title title="Part List" />
-    <DataTable
-      :headers="headers"
-      :data="items"
-      :totalCount="totalCount"
-      :pageSize="10"
-      :currentPage="currentPage"
-      @prev-page="gotoPrevPage"
-      @next-page="gotoNextPage"
-      selectable
-    >
-      <template v-slot:col_quantity="{ item }">
-        <div class="flex items-center">
-          <div class="w-2 h-2 mx-2 bg-blue-300 rounded-full"></div>
-          {{ item.quantity }}
-        </div>
-      </template>
-      <template v-slot:col_action="{ item }">
-        <button
-          @click="editItem(item)"
-          class="px-4 py-1 bg-indigo-500 hover:bg-indigo-800 text-white text-sm font-semibold rounded-md shadow-md"
-        >
-          수정
-        </button>
-      </template>
-    </DataTable>
-    <Modal v-if="isOpenModal" />
+    <div class="shadow overflow-x-auto rounded-lg">
+      <DataTable
+        :headers="headers"
+        :data="items"
+        :totalCount="totalCount"
+        :pageSize="10"
+        :currentPage="currentPage"
+        @prev-page="gotoPrevPage"
+        @next-page="gotoNextPage"
+        selectable
+      >
+        <template v-slot:col_quantity="{ item }">
+          <div class="flex items-center">
+            <div class="w-2 h-2 mx-2 bg-blue-300 rounded-full"></div>
+            {{ item.quantity }}
+          </div>
+        </template>
+        <template v-slot:col_action="{ item }">
+          <button
+            @click="editItem(item)"
+            class="px-4 py-1 bg-indigo-500 hover:bg-indigo-800 text-white text-sm font-semibold rounded-md shadow-md"
+          >
+            수정
+          </button>
+        </template>
+      </DataTable>
+      <Modal v-if="isOpenModal" />
+    </div>
   </div>
 </template>
 
@@ -35,7 +37,7 @@ import { ref, onMounted, defineComponent } from "vue";
 import PartService from "@/services/partService";
 import Title from "@/components/base/Title.vue";
 import Modal from "@/components/base/Modal.vue";
-import DataTable from "@/components/base/DataTable.vue";
+import DataTable from "@/components/table/DataTable.vue";
 import { useModal } from "@/components/hooks/useModal";
 import { IItem } from "@/services/core/interfase";
 

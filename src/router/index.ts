@@ -55,4 +55,11 @@ const router = createRouter({
   routes
 })
 
+import { useSidebar } from "@/components/hooks/useSidebar";
+router.beforeEach((to, from, next) => {
+  const { isOpen } = useSidebar()
+  isOpen.value = false
+  next()
+})
+
 export default router
