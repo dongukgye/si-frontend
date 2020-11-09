@@ -19,7 +19,7 @@
 import { defineComponent, ref } from "vue";
 import Title from "@/components/base/Title.vue";
 import Modal from "@/components/base/Modal.vue";
-import DataTable from "@/components/base/DataTable.vue";
+import DataTable from "@/components/table/DataTable.vue";
 import { useModal } from "@/components/hooks/useModal";
 
 export default defineComponent({
