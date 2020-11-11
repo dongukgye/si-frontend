@@ -27,11 +27,7 @@
       <tr>
         <td colspan="100%" class="p-0">
           <div class="px-6 py-3 bg-white">
-            <Pagination
-              :totalCount="totalCount"
-              :pageSize="pageSize"
-              :currentPage="currentPage"
-            />
+            <Pagination />
           </div>
         </td>
       </tr>
@@ -70,6 +66,7 @@
 <script lang="ts">
 import { ref, computed, defineComponent, toRefs, PropType } from "vue";
 import Pagination from "@/components/pagination/Pagination.vue";
+import { usePagination } from "@/components/hooks/usePagination";
 
 export default defineComponent({
   props: {
@@ -77,52 +74,12 @@ export default defineComponent({
     data: Array,
     striped: Boolean,
     selectable: Boolean,
-    totalCount: {
-      type: Number,
-      required: true,
-    },
-    currentPage: {
-      type: Number,
-      required: true,
-    },
-    pageSize: {
-      type: Number,
-      required: true,
-    },
   },
   components: {
     Pagination,
   },
-  setup(props, context) {
-    const totalPage = computed(() => {
-      return props.totalCount % props.pageSize === 0
-        ? props.totalCount / props.pageSize
-        : props.totalCount / props.pageSize + 1;
-    });
-
-    const hasPrevPage = computed(() => {
-      props.currentPage > 1;
-    });
-
-    const hasNextPage = computed(() => {
-      props.currentPage < totalPage.value;
-    });
-
-    function prevPage() {
-      context.emit("prev-page");
-    }
-
-    function nextPage() {
-      context.emit("next-page");
-    }
-
-    return {
-      totalPage,
-      hasPrevPage,
-      hasNextPage,
-      prevPage,
-      nextPage,
-    };
+  setup() {
+    return {};
   },
 });
 </script>

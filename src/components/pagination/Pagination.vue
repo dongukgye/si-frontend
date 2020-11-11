@@ -17,6 +17,7 @@
           href="#"
           class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
           aria-label="Previous"
+          @click="prevPage"
         >
           <!-- Heroicon name: chevron-left -->
           <svg
@@ -36,6 +37,7 @@
           href="#"
           class="-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
           aria-label="Next"
+          @click="nextPage"
         >
           <!-- Heroicon name: chevron-right -->
           <svg
@@ -58,51 +60,55 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "vue";
+import { usePagination } from "@/components/hooks/usePagination";
 
 export default defineComponent({
-  props: {
-    totalCount: {
-      type: Number,
-      required: true,
-    },
-    currentPage: {
-      type: Number,
-      required: true,
-    },
-    pageSize: {
-      type: Number,
-      required: true,
-    },
-  },
   setup(props, context) {
+    const { totalCount, pageSize, currentPage } = usePagination();
+
     const totalPage = computed(() => {
-      return props.totalCount % props.pageSize === 0
-        ? props.totalCount / props.pageSize
-        : props.totalCount / props.pageSize + 1;
+      return totalCount.value % pageSize.value === 0
+        ? totalCount.value / pageSize.value
+        : totalCount.value / pageSize.value + 1;
     });
 
     const showingFrom = computed(() => {
-      return (props.currentPage - 1) * props.pageSize + 1;
+      return (currentPage.value - 1) * pageSize.value + 1;
     });
 
     const showingTo = computed(() => {
-      return props.currentPage * props.pageSize;
+      return currentPage.value * pageSize.value;
     });
 
     const hasPrevPage = computed(() => {
-      return props.currentPage > 1;
+      currentPage.value > 1;
     });
 
     const hasNextPage = computed(() => {
-      return props.currentPage < totalPage.value;
+      currentPage.value < totalPage.value;
     });
+
+    function prevPage() {
+      if (currentPage.value > 1) {
+        currentPage.value -= 1;
+      }
+    }
+
+    function nextPage() {
+      if (currentPage.value < totalPage.value) {
+        currentPage.value += 1;
+      }
+    }
 
     return {
       totalPage,
+      totalCount,
       showingFrom,
       showingTo,
       hasPrevPage,
       hasNextPage,
+      prevPage,
+      nextPage,
     };
   },
 });

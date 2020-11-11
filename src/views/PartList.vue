@@ -1,17 +1,9 @@
 <template>
   <div>
     <Title title="Part List" />
+    <h1>current page: {{ currentPage }}</h1>
     <div class="shadow overflow-x-auto rounded-lg">
-      <DataTable
-        :headers="headers"
-        :data="items"
-        :totalCount="totalCount"
-        :pageSize="10"
-        :currentPage="currentPage"
-        @prev-page="gotoPrevPage"
-        @next-page="gotoNextPage"
-        selectable
-      >
+      <DataTable :headers="headers" :data="items" selectable>
         <template v-slot:col_quantity="{ item }">
           <div class="flex items-center">
             <div class="w-2 h-2 mx-2 bg-blue-300 rounded-full"></div>
@@ -33,12 +25,13 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, defineComponent } from "vue";
+import { ref, watch, onMounted, defineComponent } from "vue";
 import PartService from "@/services/partService";
 import Title from "@/components/base/Title.vue";
 import Modal from "@/components/base/Modal.vue";
 import DataTable from "@/components/table/DataTable.vue";
 import { useModal } from "@/components/hooks/useModal";
+import { usePagination } from "@/components/hooks/usePagination";
 import { IItem } from "@/services/core/interfase";
 
 export default defineComponent({
@@ -49,9 +42,8 @@ export default defineComponent({
   },
   setup() {
     const { isOpenModal } = useModal();
+    const { totalCount, pageSize, currentPage } = usePagination();
     const items = ref<IItem[]>([]);
-    const currentPage = ref(1);
-    const totalCount = ref(0);
     const headers = ref([
       { text: "Name", value: "name" },
       { text: "Description", value: "desc" },
@@ -66,15 +58,12 @@ export default defineComponent({
       console.log("edit item", item.category);
     }
 
-    function gotoPrevPage() {
-      currentPage.value -= 1;
-      // fetch data
-    }
-
-    function gotoNextPage() {
-      currentPage.value += 1;
-      // fetch data
-    }
+    watch(
+      () => currentPage.value,
+      (value) => {
+        console.log("fetch data for page ", value);
+      }
+    );
 
     onMounted(() => {
       PartService.getParts().then(
@@ -91,12 +80,9 @@ export default defineComponent({
     return {
       items,
       currentPage,
-      totalCount,
       isOpenModal,
       headers,
       editItem,
-      gotoPrevPage,
-      gotoNextPage,
     };
   },
 });
