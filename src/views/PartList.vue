@@ -42,7 +42,7 @@ export default defineComponent({
   },
   setup() {
     const { isOpenModal } = useModal();
-    const { totalCount, pageSize, currentPage } = usePagination();
+    const { totalCount, currentPage } = usePagination();
     const items = ref<IItem[]>([]);
     const headers = ref([
       { text: "Name", value: "name" },
@@ -58,15 +58,8 @@ export default defineComponent({
       console.log("edit item", item.category);
     }
 
-    watch(
-      () => currentPage.value,
-      (value) => {
-        console.log("fetch data for page ", value);
-      }
-    );
-
-    onMounted(() => {
-      PartService.getParts().then(
+    function fetchData(params: any) {
+      PartService.getParts(params).then(
         (data) => {
           items.value = data.results;
           totalCount.value = data.count;
@@ -75,6 +68,18 @@ export default defineComponent({
           console.log(err);
         }
       );
+    }
+
+    watch(
+      () => currentPage.value,
+      (value) => {
+        console.log("fetch data for page ", value);
+        fetchData({ page: value });
+      }
+    );
+
+    onMounted(() => {
+      fetchData({ page: currentPage.value });
     });
 
     return {

@@ -9,10 +9,20 @@ class HttpClient implements IHttpClient {
     request<T>(params: IHttpRequest<T>): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             const { path, method, payload } = params
-            const axiosConfig: AxiosRequestConfig = {
-                url: this.baseURL + path,
-                method: method,
-                data: payload
+            let axiosConfig: AxiosRequestConfig = {}
+
+            if (method === 'get') {
+                axiosConfig = {
+                    url: this.baseURL + path,
+                    method: method,
+                    params: payload
+                }
+            } else if (method === 'post') {
+                axiosConfig = {
+                    url: this.baseURL + path,
+                    method: method,
+                    data: payload
+                }
             }
 
             axios.request(axiosConfig)
