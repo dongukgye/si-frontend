@@ -7,7 +7,8 @@ import { Method } from 'axios'
 export interface IHttpRequest<T> {
     path: string
     method: Method
-    payload?: T
+    data?: T
+    params?: T
 }
 
 export interface IHttpResponse {

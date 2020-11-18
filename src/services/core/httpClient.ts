@@ -6,23 +6,14 @@ class HttpClient implements IHttpClient {
 
     baseURL = process.env.VUE_APP_API_BASE_URL
 
-    request<T>(params: IHttpRequest<T>): Promise<T> {
+    request<T>(parameters: IHttpRequest<T>): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            const { path, method, payload } = params
-            let axiosConfig: AxiosRequestConfig = {}
-
-            if (method === 'get') {
-                axiosConfig = {
-                    url: this.baseURL + path,
-                    method: method,
-                    params: payload
-                }
-            } else if (method === 'post') {
-                axiosConfig = {
-                    url: this.baseURL + path,
-                    method: method,
-                    data: payload
-                }
+            const { path, method, data, params } = parameters
+            const axiosConfig: AxiosRequestConfig = {
+                url: this.baseURL + path,
+                method: method,
+                data: data,
+                params: params
             }
 
             axios.request(axiosConfig)

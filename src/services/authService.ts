@@ -7,7 +7,7 @@ class AuthService {
         const params: IHttpRequest<any> = {
             path: '/auth/token-auth',
             method: 'post',
-            payload: user
+            data: user
         }
         return httpClient.request<any>(params)
     }

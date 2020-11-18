@@ -8,7 +8,7 @@ class PartService {
         const axiosConfig: IHttpRequest<any> = {
             path: '/inventory/parts/',
             method: 'get',
-            payload: params
+            params: params
         }
         return httpClient.request<IHttpResponse>(axiosConfig)
     }
@@ -17,7 +17,7 @@ class PartService {
         const params: IHttpRequest<any> = {
             path: 'inventory/parts/',
             method: 'post',
-            payload: data
+            data: data
         }
         return httpClient.request<IHttpResponse>(params)
     }
@@ -26,7 +26,7 @@ class PartService {
         const params: IHttpRequest<any> = {
             path: `inventory/part/${data.id}/`,
             method: 'put',
-            payload: data
+            data: data
         }
         return httpClient.request<IHttpResponse>(params)
     }
@@ -35,7 +35,7 @@ class PartService {
         const params: IHttpRequest<any> = {
             path: `inventory/part/${data.id}/`,
             method: 'delete',
-            payload: data
+            data: data
         }
         return httpClient.request<IHttpResponse>(params)
     }
