@@ -10,7 +10,7 @@
 
     <div
       :class="isOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
-      class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-gray-900 overflow-y-auto lg:translate-x-0 lg:static lg:inset-0"
+      class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-indigo-800 shadow-2xs overflow-y-auto lg:translate-x-0 lg:static lg:inset-0"
     >
       <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
@@ -45,7 +45,7 @@
           v-for="(link, i) in navLinks"
           :key="i"
           :class="[$route.name === link.name ? activeClass : inactiveClass]"
-          class="flex items-center mt-4 mx-4 py-2 px-6 rounded-lg"
+          class="flex items-center mt-1 mx-4 py-2 px-6 rounded-lg"
           :to="link.path"
         >
           <svg

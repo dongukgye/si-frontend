@@ -1,8 +1,7 @@
 <template>
   <div>
     <Title title="Part List" />
-    <h1>current page: {{ currentPage }}</h1>
-    <div class="shadow overflow-x-auto rounded-lg">
+    <div class="shadow-2xs overflow-x-auto rounded-lg">
       <DataTable :headers="headers" :data="items" selectable>
         <template v-slot:col_quantity="{ item }">
           <div class="flex items-center">
