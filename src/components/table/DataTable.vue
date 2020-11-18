@@ -69,9 +69,8 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, defineComponent, toRefs, PropType } from "vue";
+import { ref, computed, defineComponent } from "vue";
 import Pagination from "@/components/pagination/Pagination.vue";
-import { usePagination } from "@/components/hooks/usePagination";
 
 export default defineComponent({
   props: {
@@ -90,12 +89,6 @@ export default defineComponent({
     // - TODO: implement client side pagination and sorting (because of select all feature for sst is suck)
 
     const selectedItems = ref(Array<any>());
-    const semiSelected = computed(() => {
-      return (
-        0 < selectedItems.value.length &&
-        selectedItems.value.length < props.data.length
-      );
-    });
     const selectAll = computed({
       get: () =>
         selectedItems.value.length
@@ -113,7 +106,6 @@ export default defineComponent({
     });
     return {
       selectAll,
-      semiSelected,
       selectedItems,
     };
   },
