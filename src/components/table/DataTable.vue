@@ -8,7 +8,9 @@
         >
           <input
             type="checkbox"
+            v-model="selectAll"
             class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+            :class="semiSelected ? `form-checkbox-semi` : ``"
           />
         </th>
         <th
@@ -46,6 +48,9 @@
         >
           <input
             type="checkbox"
+            :id="item.id"
+            :value="item"
+            v-model="selectedItems"
             class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
           />
         </td>
@@ -71,15 +76,46 @@ import { usePagination } from "@/components/hooks/usePagination";
 export default defineComponent({
   props: {
     headers: Array,
-    data: Array,
+    data: {
+      type: Array,
+      required: true,
+    },
     striped: Boolean,
     selectable: Boolean,
   },
   components: {
     Pagination,
   },
-  setup() {
-    return {};
+  setup(props) {
+    // - TODO: implement client side pagination and sorting (because of select all feature for sst is suck)
+
+    const selectedItems = ref(Array<any>());
+    const semiSelected = computed(() => {
+      return (
+        0 < selectedItems.value.length &&
+        selectedItems.value.length < props.data.length
+      );
+    });
+    const selectAll = computed({
+      get: () =>
+        selectedItems.value.length
+          ? selectedItems.value.length === props.data.length
+          : false,
+      set: (isSelectAll) => {
+        const selected: Array<any> = [];
+        if (isSelectAll) {
+          props.data.forEach((item: any) => {
+            selected.push(item);
+          });
+        }
+        selectedItems.value = selected;
+      },
+    });
+    return {
+      selectAll,
+      semiSelected,
+      selectedItems,
+    };
   },
 });
 </script>
