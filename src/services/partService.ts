@@ -4,13 +4,13 @@ import { IHttpRequest, IHttpResponse } from '@/services/core/interfase'
 // - TODO: add params for getParts() API
 
 class PartService {
-    getParts(params: any): Promise<IHttpResponse> {
+    getParts(params: any) {
         const axiosConfig: IHttpRequest<any> = {
             path: '/inventory/parts/',
             method: 'get',
             params: params
         }
-        return httpClient.request<IHttpResponse>(axiosConfig)
+        return httpClient.request(axiosConfig)
     }
 
     createPart(data: any): Promise<IHttpResponse> {
