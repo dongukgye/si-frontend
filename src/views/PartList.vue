@@ -1,7 +1,7 @@
 <template>
   <div>
     <Title title="Part List" />
-    <div class="shadow-2xs overflow-x-auto rounded-lg">
+    <div class="h-auto shadow-2xs overflow-x-auto rounded-lg relative">
       <DataTable :headers="headers" :data="items" selectable>
         <template v-slot:col_quantity="{ item }">
           <div class="flex items-center">
@@ -18,8 +18,9 @@
           </button>
         </template>
       </DataTable>
-      <Modal v-if="isOpenModal" />
+      <Modal v-if="isOpenModal1" />
     </div>
+    <Slider />
   </div>
 </template>
 
@@ -29,7 +30,8 @@ import PartService from "@/services/partService";
 import Title from "@/components/base/Title.vue";
 import Modal from "@/components/base/Modal.vue";
 import DataTable from "@/components/table/DataTable.vue";
-import { useModal } from "@/components/hooks/useModal";
+import Slider from "@/components/slider/Slider.vue";
+import { useOpenState } from "@/components/hooks/useOpenState";
 import { usePagination } from "@/components/hooks/usePagination";
 import { IItem } from "@/services/core/interfase";
 
@@ -37,11 +39,12 @@ export default defineComponent({
   components: {
     Title,
     Modal,
+    Slider,
     DataTable,
   },
   setup() {
-    const { isOpenModal } = useModal();
-    const { totalCount, currentPage } = usePagination();
+    const { isOpenSlider } = useOpenState();
+    const { totalCount } = usePagination();
     const items = ref<IItem[]>([]);
     const headers = ref([
       { text: "Name", value: "name" },
@@ -53,15 +56,15 @@ export default defineComponent({
     ]);
 
     function editItem(item: any) {
-      isOpenModal.value = !isOpenModal.value;
+      isOpenSlider.value = true;
       console.log("edit item", item.category);
     }
 
     function fetchData(params: any) {
       PartService.getParts(params).then(
         (data) => {
-          items.value = data.results;
-          totalCount.value = data.count;
+          items.value = data;
+          totalCount.value = items.value.length;
         },
         (err) => {
           console.log(err);
@@ -69,22 +72,12 @@ export default defineComponent({
       );
     }
 
-    watch(
-      () => currentPage.value,
-      (value) => {
-        console.log("fetch data for page ", value);
-        fetchData({ page: value });
-      }
-    );
-
     onMounted(() => {
-      fetchData({ page: currentPage.value });
+      fetchData({});
     });
 
     return {
       items,
-      currentPage,
-      isOpenModal,
       headers,
       editItem,
     };
