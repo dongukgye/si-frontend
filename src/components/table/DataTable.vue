@@ -106,12 +106,6 @@ export default defineComponent({
         selectedItems.value = selected;
       },
     });
-    const isPartialSelected = computed(() => {
-      return (
-        0 < selectedItems.value.length &&
-        selectedItems.value.length < props.data.length
-      );
-    });
 
     const paginatedItems = computed(() => {
       return getPaginatedItems(props.data);
@@ -120,7 +114,6 @@ export default defineComponent({
     return {
       selectAll,
       selectedItems,
-      isPartialSelected,
       paginatedItems,
     };
   },
