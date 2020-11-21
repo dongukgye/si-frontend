@@ -112,11 +112,11 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "vue";
-import { useModal } from "@/components/hooks/useModal";
+import { useOpenState } from "@/components/hooks/useOpenState";
 
 export default defineComponent({
   setup() {
-    const { isOpenModal } = useModal();
+    const { isOpenModal } = useOpenState();
     return { isOpenModal };
   },
 });

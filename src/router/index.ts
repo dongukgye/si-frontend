@@ -55,10 +55,10 @@ const router = createRouter({
   routes
 })
 
-import { useSidebar } from "@/components/hooks/useSidebar";
+import { useOpenState } from "@/components/hooks/useOpenState";
 router.beforeEach((to, from, next) => {
-  const { isOpen } = useSidebar()
-  isOpen.value = false
+  const { isOpenSidebar } = useOpenState()
+  isOpenSidebar.value = false
   next()
 })
 

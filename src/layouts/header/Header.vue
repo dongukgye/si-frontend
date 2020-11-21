@@ -4,7 +4,7 @@
   >
     <div class="flex items-center">
       <button
-        @click="isOpen = true"
+        @click="isOpenSidebar = true"
         class="text-gray-500 focus:outline-none lg:hidden"
       >
         <svg
@@ -107,13 +107,13 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { useSidebar } from "@/components/hooks/useSidebar";
+import { useOpenState } from "@/components/hooks/useOpenState";
 export default defineComponent({
   setup() {
     const dropdownOpen = ref(false);
-    const { isOpen } = useSidebar();
+    const { isOpenSidebar } = useOpenState();
     return {
-      isOpen,
+      isOpenSidebar,
       dropdownOpen,
     };
   },

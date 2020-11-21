@@ -1,10 +1,12 @@
 <template>
-  <table class="min-w-full divide-y divide-gray-200">
+  <table
+    class="min-w-full divide-y divide-gray-200 rounded-lg shadow-2xs overflow-hidden"
+  >
     <thead>
       <tr>
         <th
           v-if="selectable"
-          class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+          class="px-6 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
         >
           <input
             type="checkbox"
@@ -16,7 +18,7 @@
         <th
           v-for="(header, i) in headers"
           :key="i"
-          class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider"
+          class="px-6 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider"
         >
           <slot name="header" :header="header">
             {{ header.text }}
@@ -28,7 +30,7 @@
     <tfoot>
       <tr>
         <td colspan="100%" class="p-0">
-          <div class="px-6 py-3 bg-white">
+          <div class="px-6 py-2 bg-white rounded-lg">
             <Pagination />
           </div>
         </td>
@@ -37,19 +39,19 @@
 
     <tbody class="bg-white divide-y divide-gray-200">
       <tr
-        v-for="(item, i) in data"
+        v-for="(item, i) in paginatedItems"
         :key="i"
         class="hover:bg-gray-100 hover:bg-opacity-30"
         :class="striped && i % 2 == 0 ? `bg-gray-100` : ``"
       >
         <td
           v-if="selectable"
-          class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider"
+          class="px-6 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider"
         >
           <input
             type="checkbox"
             :id="item.id"
-            :value="item"
+            :value="item.id"
             v-model="selectedItems"
             class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
           />
@@ -71,6 +73,7 @@
 <script lang="ts">
 import { ref, computed, defineComponent } from "vue";
 import Pagination from "@/components/pagination/Pagination.vue";
+import { usePagination } from "@/components/hooks/usePagination";
 
 export default defineComponent({
   props: {
@@ -86,8 +89,7 @@ export default defineComponent({
     Pagination,
   },
   setup(props) {
-    // - TODO: implement client side pagination and sorting (because of select all feature for sst is suck)
-
+    const { getPaginatedItems } = usePagination();
     const selectedItems = ref(Array<any>());
     const selectAll = computed({
       get: () =>
@@ -98,15 +100,28 @@ export default defineComponent({
         const selected: Array<any> = [];
         if (isSelectAll) {
           props.data.forEach((item: any) => {
-            selected.push(item);
+            selected.push(item.id);
           });
         }
         selectedItems.value = selected;
       },
     });
+    const isPartialSelected = computed(() => {
+      return (
+        0 < selectedItems.value.length &&
+        selectedItems.value.length < props.data.length
+      );
+    });
+
+    const paginatedItems = computed(() => {
+      return getPaginatedItems(props.data);
+    });
+
     return {
       selectAll,
       selectedItems,
+      isPartialSelected,
+      paginatedItems,
     };
   },
 });

@@ -2,14 +2,16 @@
   <div class="flex">
     <!-- Backdrop -->
     <div
-      :class="isOpen ? 'block' : 'hidden'"
-      @click="isOpen = false"
+      :class="isOpenSidebar ? 'block' : 'hidden'"
+      @click="isOpenSidebar = false"
       class="fixed z-20 inset-0 bg-black opacity-50 transition-opacity lg:hidden"
     ></div>
     <!-- End Backdrop -->
 
     <div
-      :class="isOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
+      :class="
+        isOpenSidebar ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'
+      "
       class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-indigo-800 shadow-2xs overflow-y-auto lg:translate-x-0 lg:static lg:inset-0"
     >
       <div class="flex items-center justify-center mt-8">
@@ -80,10 +82,11 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { useSidebar } from "@/components/hooks/useSidebar";
+import { useOpenState } from "@/components/hooks/useOpenState";
+
 export default defineComponent({
   setup() {
-    const { isOpen } = useSidebar();
+    const { isOpenSidebar } = useOpenState();
     const activeClass = ref(
       // "bg-gray-600 bg-opacity-25 text-gray-100 border-gray-100"
       "bg-white text-gray-700 border-gray-100 shadow-lg"
@@ -118,7 +121,7 @@ export default defineComponent({
       },
     ]);
     return {
-      isOpen,
+      isOpenSidebar,
       activeClass,
       inactiveClass,
       navLinks,
