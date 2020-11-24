@@ -3,25 +3,25 @@
 ## TODO
 
 ### Components
-[ ] Slider
+- [ ] Slider
     - [ ] Implement slots
         - [ ] Title slot
         - [ ] Content slot
 
 ### Part List view
-[ ] Need order 
+- [ ] Need order 
     - [ ] Toggle
     - [ ] Order button
-[ ] Create item
+- [ ] Create item
     - [ ] By form
         - [ ] Button
         - [ ] Slider
     - [ ] By file 
         - [ ] Button
         - [ ] Modal
-[ ] Update item
+- [ ] Update item
     - [ ] Button (change edit button > option dropdown with edit and delete buttons)
     - [ ] Slider
-[ ] Delete item
+- [ ] Delete item
     - [ ] Button (change edit button > option dropdown with edit and delete buttons)
     - [ ] Modal
