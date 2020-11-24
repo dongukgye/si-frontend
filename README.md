@@ -1,24 +1,27 @@
-# si-frontend
+# SI Frontend
 
-## Project setup
-```
-npm install
-```
+## TODO
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Components
+[ ] Slider
+    - [ ] Implement slots
+        - [ ] Title slot
+        - [ ] Content slot
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Part List view
+[ ] Need order 
+    - [ ] Toggle
+    - [ ] Order button
+[ ] Create item
+    - [ ] By form
+        - [ ] Button
+        - [ ] Slider
+    - [ ] By file 
+        - [ ] Button
+        - [ ] Modal
+[ ] Update item
+    - [ ] Button (change edit button > option dropdown with edit and delete buttons)
+    - [ ] Slider
+[ ] Delete item
+    - [ ] Button (change edit button > option dropdown with edit and delete buttons)
+    - [ ] Modal
