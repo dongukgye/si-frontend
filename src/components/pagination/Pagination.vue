@@ -156,6 +156,7 @@ export default defineComponent({
 
     function setPageSize(size: number) {
       openPageSizeDropdown.value = false;
+      currentPage.value = 1
       if (size === 0) {
         pageSize.value = totalCount.value;
       } else {
