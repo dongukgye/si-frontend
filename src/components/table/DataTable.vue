@@ -6,7 +6,7 @@
       <tr>
         <th
           v-if="selectable"
-          class="px-6 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+          class="px-6 py-2 bg-gray-50 text-left leading-4"
         >
           <input
             type="checkbox"
@@ -18,7 +18,7 @@
         <th
           v-for="(header, i) in headers"
           :key="i"
-          class="px-6 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider"
+          class="px-6 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider"
         >
           <slot name="header" :header="header">
             {{ header.text }}
@@ -37,7 +37,7 @@
       </tr>
     </tfoot>
 
-    <tbody class="bg-white divide-y divide-gray-200">
+    <tbody class="bg-white divide-y divide-gray-200 text-sm">
       <tr
         v-for="(item, i) in paginatedItems"
         :key="i"
@@ -46,7 +46,7 @@
       >
         <td
           v-if="selectable"
-          class="px-6 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider"
+          class="px-6 py-2 bg-gray-50 text-left leading-4"
         >
           <input
             type="checkbox"
@@ -59,7 +59,7 @@
         <td
           v-for="(header, j) in headers"
           :key="j"
-          class="px-6 py-2 whitespace-no-wrap text-gray-600"
+          class="px-6 py-2 whitespace-no-wrap text-gray-800 font-light"
         >
           <slot :name="`col_${header.value}`" :item="item" :header="header">
             {{ item[header.value] }}

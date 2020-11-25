@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-end text-sm text-gray-700">
+  <div class="flex items-center justify-end text-xs font-light text-gray-700">
     <div class="flex items-center">
       <!-- This example requires Tailwind CSS v2.0+ -->
       <p class="mr-4">
@@ -11,18 +11,18 @@
         <div>
           <button
             type="button"
-            class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+            class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white font-light hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
             id="options-menu"
             aria-haspopup="true"
             aria-expanded="true"
             @click="openPageSizeDropdown = !openPageSizeDropdown"
           >
-            <p class="text-gray-700">
+            <p>
               {{ pageSize }}
             </p>
             <!-- Heroicon name: chevron-down -->
             <svg
-              class="-mr-1 ml-2 h-5 w-5 text-gray-500"
+              class="-mr-1 ml-2 h-4 w-4 text-gray-500"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
@@ -56,7 +56,7 @@
               v-for="(ps, i) in pageSizes"
               :key="i"
               href="#"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              class="block px-4 py-2 text-xs hover:bg-gray-100 hover:text-gray-900"
               role="menuitem"
               @click="setPageSize(ps.value)"
               >{{ ps.key }}</a
@@ -66,7 +66,7 @@
       </div>
 
       <div class="mr-4">
-        <p class="leading-5 text-gray-700">
+        <p class="leading-5">
           <span>{{ totalCount }} 중 {{ showingFrom }}-{{ showingTo }}</span>
         </p>
       </div>
@@ -80,7 +80,7 @@
         >
           <!-- Heroicon name: chevron-left -->
           <svg
-            class="h-5 w-5"
+            class="h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -100,7 +100,7 @@
         >
           <!-- Heroicon name: chevron-right -->
           <svg
-            class="h-5 w-5"
+            class="h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
