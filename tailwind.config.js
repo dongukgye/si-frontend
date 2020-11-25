@@ -25,6 +25,7 @@ module.exports = {
     transitionProperty: ['responsive', 'hover', 'focus']
   },
   plugins: [
-    require('@tailwindcss/custom-forms')
+    // require('@tailwindcss/custom-forms'),
+    require('@tailwindcss/forms')
   ]
 }
