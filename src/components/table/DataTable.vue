@@ -11,8 +11,7 @@
           <input
             type="checkbox"
             v-model="selectAll"
-            class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-            :class="semiSelected ? `form-checkbox-semi` : ``"
+            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border border-gray-300 rounded"
           />
         </th>
         <th
@@ -53,7 +52,7 @@
             :id="item.id"
             :value="item.id"
             v-model="selectedItems"
-            class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border border-gray-300 rounded"
           />
         </td>
         <td
