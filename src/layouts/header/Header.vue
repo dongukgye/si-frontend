@@ -65,7 +65,7 @@
       <div class="relative">
         <button
           @click="dropdownOpen = !dropdownOpen"
-          class="relative z-10 block h-8 w-8 rounded-full overflow-hidden shadow focus:outline-none"
+          class="relative block h-8 w-8 rounded-full overflow-hidden shadow focus:outline-none"
         >
           <img
             class="h-full w-full object-cover"
