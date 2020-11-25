@@ -38,6 +38,7 @@
         </div>
 
         <div
+          v-show="openPageSizeDropdown"
           :class="
             `origin-top-right absolute right-0 bottom-0 mb-12 w-full rounded-md shadow-2xs bg-white ring-1 ring-black ring-opacity-5 transform transition ${
               openPageSizeDropdown
