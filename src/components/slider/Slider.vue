@@ -63,16 +63,22 @@
               id="slide-over-heading"
               class="text-lg font-medium text-gray-900"
             >
-              Panel title
+              <slot name="header">
+                Panel title
+              </slot>
             </h2>
           </div>
           <div class="mt-6 relative flex-1 px-4 sm:px-6">
             <!-- Replace with your content -->
             <div class="absolute inset-0 px-4 sm:px-6">
               <div
-                class="h-full border-2 border-dashed border-gray-200"
+                class="h-full"
                 aria-hidden="true"
-              ></div>
+              >
+                <slot name="content">
+                  Panel Content
+                </slot>
+              </div>
             </div>
             <!-- /End replace -->
           </div>
