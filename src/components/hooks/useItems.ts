@@ -10,6 +10,10 @@ const state = reactive({
   originItem: {},
 });
 
+function _closeSlider() {
+  isOpenSlider.value = false;
+}
+
 function editItem(item: any) {
   state.editedIndex = state.items.indexOf(item);
   state.editedItem = Object.assign({}, item);
@@ -21,7 +25,8 @@ function deleteItem(item: any) {
   // delete item
 }
 
-function createSuccess() {
+function createSuccess(data: any) {
+  state.items.unshift(data);
   // state.items.unshift(response.data)
   // init editedItem and originItem
 }
@@ -33,7 +38,7 @@ function createFailed() {
 
 function editSuccess(data: any) {
   Object.assign(state.items[state.editedIndex], data);
-  isOpenSlider.value = false;
+  _closeSlider();
   // init editedItem and originItem
 }
 
@@ -52,7 +57,7 @@ function deleteFailed() {
   // restore editedItem to originItem
 }
 
-export function useItems() {
+export function useItems<T>() {
   return {
     ...toRefs(state),
     editItem,
