@@ -4,10 +4,7 @@
   >
     <thead>
       <tr>
-        <th
-          v-if="selectable"
-          class="px-6 py-2 bg-gray-50 text-left leading-4"
-        >
+        <th v-if="selectable" class="px-6 py-2 bg-gray-50 text-left leading-4">
           <input
             type="checkbox"
             v-model="selectAll"
@@ -43,10 +40,7 @@
         class="hover:bg-gray-100 hover:bg-opacity-30"
         :class="striped && i % 2 == 0 ? `bg-gray-100` : ``"
       >
-        <td
-          v-if="selectable"
-          class="px-6 py-2 bg-gray-50 text-left leading-4"
-        >
+        <td v-if="selectable" class="px-6 py-2 bg-gray-50 text-left leading-4">
           <input
             type="checkbox"
             :id="item.id"

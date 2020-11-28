@@ -1,6 +1,29 @@
 <template>
   <div>
-    <Title title="Part List" />
+    <div class="flex items-center justify-between px-2">
+      <div>
+        <Title title="Part List" />
+      </div>
+      <div>
+        <Button @click="editItem(defaultItem)">
+          <svg
+            class="h-5 w-5 inline-block"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
+          </svg>
+          부품
+        </Button>
+      </div>
+    </div>
     <div class="h-auto shadow-2xs overflow-x-auto rounded-lg relative">
       <DataTable :headers="headers" :data="items" selectable>
         <template v-slot:col_quantity="{ item }">
@@ -9,79 +32,111 @@
             {{ item.quantity }}
           </div>
         </template>
+
         <template v-slot:col_action="{ item }">
-          <button
-            @click="editItem(item)"
-            class="px-4 py-1 bg-indigo-500 hover:bg-indigo-800 text-white text-sm font-semibold rounded-md shadow-md"
-          >
-            수정
-          </button>
+          <Button @click="editItem(item)" text> 수정 </Button>
         </template>
       </DataTable>
     </div>
     <Slider>
-      <template v-slot:header>
-        This is custom header
-      </template>
+      <template v-slot:header> This is custom header </template>
 
       <template v-slot:content>
-        <div 
-        v-for="(header, i) in headers"
-        :key="i"
-        class="col-span-6 sm:col-span-4 my-2">
-          <label for="email_address" class="block text-sm font-medium text-gray-700">{{ header.text }}</label>
-          <input v-model="editedItem[header.value]" type="text" id="email_address" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md">
-        </div>
-         <div class="py-2 bg-gray-50 text-right">
-          <button 
-            type="submit" 
-            @click="handleUpdate"
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-2xs text-sm font-bold rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        <div
+          v-for="(header, i) in editHeaders"
+          :key="i"
+          class="col-span-6 sm:col-span-4 my-2"
+        >
+          <label
+            for="email_address"
+            class="block text-sm font-medium text-gray-700"
+            >{{ header.text }}</label
           >
-            수정             
-          </button>
-         </div>
+          <input
+            v-model="editedItem[header.value]"
+            type="text"
+            id="email_address"
+            class="mt-1 focus:shadow-outline block w-full sm:text-sm border border-gray-300 rounded-md"
+          />
+        </div>
+        <div class="flex items-center justify-between px-2">
+          <div v-show="editedIndex > -1" class="flex-1">
+            <Button type="danger" text> 삭제 </Button>
+          </div>
+          <div class="flex-1 text-right">
+            <Button @click="handleUpdate"> {{ saveButtonLabel }} </Button>
+          </div>
+        </div>
       </template>
     </Slider>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, watch, onMounted, defineComponent } from "vue";
+import { ref, onMounted, defineComponent, computed } from "vue";
 import PartService from "@/services/partService";
 import Title from "@/components/base/Title.vue";
-// import Modal from "@/components/base/Modal.vue";
 import DataTable from "@/components/table/DataTable.vue";
 import Slider from "@/components/slider/Slider.vue";
-// import Button from "@/components/button/Button.vue";
 import { useItems } from "@/components/hooks/useItems";
-// import { useOpenState } from "@/components/hooks/useOpenState";
 import { usePagination } from "@/components/hooks/usePagination";
-import { IItem } from "@/services/core/interfase";
+import { IInventoryPart } from "@/types/inventory";
+import partService from "@/services/partService";
+import Button from "@/components/button/Button.vue";
 
 export default defineComponent({
   components: {
-    Title,
-    // Modal,
-    Slider,
-    // Button,
+    Button,
     DataTable,
+    Slider,
+    Title,
   },
   setup() {
     const { totalCount } = usePagination();
-    const { items, editedItem, editedIndex, editItem, editSuccess, editFailed } = useItems();
+    const {
+      items,
+      editedItem,
+      editedIndex,
+      editItem,
+      createSuccess,
+      createFailed,
+      editSuccess,
+      editFailed,
+    } = useItems();
+    const defaultItem = {
+      name: "",
+      spec: "",
+      serial: "",
+      desc: "",
+      category: 1,
+      quantity: 0,
+      ideal_quantity: 0,
+      order_quantity: 0,
+    };
     const headers = ref([
       { text: "Name", value: "name" },
       { text: "Description", value: "desc" },
       { text: "Spec", value: "spec" },
+      { text: "Serial", value: "serial" },
       { text: "Quantity", value: "quantity" },
       { text: "Ideal quantity", value: "ideal_quantity" },
-      { text: "Action", value: "action" },
+      { text: "Order quantity", value: "order_quantity" },
+      { text: "", value: "action" },
     ]);
+
+    const editHeaders = computed(() => {
+      return headers.value.filter((header) => {
+        return header.value !== "action";
+      });
+    });
+
+    const saveButtonLabel = computed(() => {
+      return editedIndex.value > -1 ? "수정" : "추가";
+    });
 
     function fetchData(params: any) {
       PartService.getParts(params).then(
-        (data) => {
+        (data: IInventoryPart) => {
           items.value = data;
           totalCount.value = items.value.length;
         },
@@ -92,15 +147,27 @@ export default defineComponent({
     }
 
     function handleUpdate() {
-      PartService.updatePart(editedItem.value).then(
-        (data) => {
-          editSuccess(data);
-        },
-        (error) => {
-          console.log(error);
-          editFailed();
-        }
-      )
+      if (editedIndex.value === -1) {
+        const data = editedItem.value as IInventoryPart;
+        partService.createPart(data).then(
+          (data) => {
+            createSuccess(data);
+          },
+          (error) => {
+            createFailed();
+          }
+        );
+      } else {
+        PartService.updatePart(editedItem.value).then(
+          (data) => {
+            editSuccess(data);
+          },
+          (error) => {
+            console.log(error);
+            editFailed();
+          }
+        );
+      }
     }
 
     onMounted(() => {
@@ -113,7 +180,10 @@ export default defineComponent({
       editedIndex,
       handleUpdate,
       headers,
+      editHeaders,
       editItem,
+      defaultItem,
+      saveButtonLabel,
     };
   },
 });
