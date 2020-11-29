@@ -13,6 +13,10 @@
   - [x] Button type: danger(red), success(green)
   - [x] Text button
 
+- [x] Dropdown
+
+- [ ] LabeledInput
+
 ### useItems Composition API
 
 Manage frontend item objects from composition API (CRUD)
@@ -49,3 +53,5 @@ Manage frontend item objects from composition API (CRUD)
 - [ ] Delete item
   - [ ] Button (change edit button > option dropdown with edit and delete buttons)
   - [ ] Modal
+- [ ] Edit Slider
+  - [ ] Different Input type by header definetion
