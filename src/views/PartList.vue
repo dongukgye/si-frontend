@@ -5,7 +5,7 @@
         <Title title="Part List" />
       </div>
       <div>
-        <Button @click="editItem(defaultItem)">
+        <Button @click="startEditItem(defaultItem, createFunction)">
           <svg
             class="h-5 w-5 inline-block"
             xmlns="http://www.w3.org/2000/svg"
@@ -33,8 +33,50 @@
           </div>
         </template>
 
+        <template v-slot:col_category="{ item }">
+          {{ getCategoryNameFromId(item.category) }}
+        </template>
+
         <template v-slot:col_action="{ item }">
-          <Button @click="editItem(item)" text> 수정 </Button>
+          <div class="flex items-center">
+            <Button @click="startEditItem(item, editFunction)" text>
+              <svg
+                class="h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+            </Button>
+
+            <Button
+              @click="startDeleteItem(item, deleteFunction)"
+              text
+              type="danger"
+            >
+              <svg
+                class="h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </Button>
+          </div>
         </template>
       </DataTable>
     </div>
@@ -42,29 +84,28 @@
       <template v-slot:header> This is custom header </template>
 
       <template v-slot:content>
-        <div
-          v-for="(header, i) in editHeaders"
-          :key="i"
-          class="col-span-6 sm:col-span-4 my-2"
-        >
-          <label
-            for="email_address"
-            class="block text-sm font-medium text-gray-700"
-            >{{ header.text }}</label
-          >
-          <input
+        <div v-for="(header, i) in editHeaders" :key="i" class="my-2">
+          <labeled-input
+            v-if="header.type === 'text'"
+            :label="header.text"
             v-model="editedItem[header.value]"
-            type="text"
-            id="email_address"
-            class="mt-1 focus:shadow-outline block w-full sm:text-sm border border-gray-300 rounded-md"
           />
+          <template v-else-if="header.type === 'select'">
+            <label class="block text-sm font-medium text-gray-700"
+              >Category
+            </label>
+            <dropdown
+              v-model="editedItem.category"
+              :items="categories"
+              item-value="id"
+              item-text="name"
+              class="mt-1"
+            />
+          </template>
         </div>
         <div class="flex items-center justify-between px-2">
-          <div v-show="editedIndex > -1" class="flex-1">
-            <Button type="danger" text> 삭제 </Button>
-          </div>
           <div class="flex-1 text-right">
-            <Button @click="handleUpdate"> {{ saveButtonLabel }} </Button>
+            <Button @click="processEditItem"> {{ saveButtonLabel }} </Button>
           </div>
         </div>
       </template>
@@ -78,31 +119,41 @@ import PartService from "@/services/partService";
 import Title from "@/components/base/Title.vue";
 import DataTable from "@/components/table/DataTable.vue";
 import Slider from "@/components/slider/Slider.vue";
-import { useItems } from "@/components/hooks/useItems";
+import { useItemCrud } from "@/components/hooks/useItemCrud";
 import { usePagination } from "@/components/hooks/usePagination";
-import { IInventoryPart } from "@/types/inventory";
+import { IPart } from "@/types/inventory";
+import { ICategory } from "@/types/inventory";
 import partService from "@/services/partService";
+import CategoryService from "@/services/categoryService";
 import Button from "@/components/button/Button.vue";
+import Dropdown from "@/components/dropdown/Dropdown.vue";
+import LabeledInput from "@/components/input/LabeledInput.vue";
 
 export default defineComponent({
   components: {
     Button,
     DataTable,
+    Dropdown,
     Slider,
     Title,
+    LabeledInput,
   },
   setup() {
+    const openCategoryDropdown = ref(false);
+    const deleteFunction = ref(partService.deletePart);
+    const createFunction = ref(partService.createPart);
+    const editFunction = ref(partService.updatePart);
+    const categories = ref([]);
     const { totalCount } = usePagination();
     const {
-      items,
-      editedItem,
       editedIndex,
-      editItem,
-      createSuccess,
-      createFailed,
-      editSuccess,
-      editFailed,
-    } = useItems();
+      editedItem,
+      items,
+      processEditItem,
+      processDeleteItem,
+      startEditItem,
+      startDeleteItem,
+    } = useItemCrud();
     const defaultItem = {
       name: "",
       spec: "",
@@ -114,13 +165,14 @@ export default defineComponent({
       order_quantity: 0,
     };
     const headers = ref([
-      { text: "Name", value: "name" },
-      { text: "Description", value: "desc" },
-      { text: "Spec", value: "spec" },
-      { text: "Serial", value: "serial" },
-      { text: "Quantity", value: "quantity" },
-      { text: "Ideal quantity", value: "ideal_quantity" },
-      { text: "Order quantity", value: "order_quantity" },
+      { text: "Name", value: "name", type: "text" },
+      { text: "Description", value: "desc", type: "text" },
+      { text: "Category", value: "category", type: "select" },
+      { text: "Spec", value: "spec", type: "text" },
+      { text: "Serial", value: "serial", type: "text" },
+      { text: "Quantity", value: "quantity", type: "text" },
+      { text: "Ideal quantity", value: "ideal_quantity", type: "text" },
+      { text: "Order quantity", value: "order_quantity", type: "text" },
       { text: "", value: "action" },
     ]);
 
@@ -136,7 +188,7 @@ export default defineComponent({
 
     function fetchData(params: any) {
       PartService.getParts(params).then(
-        (data: IInventoryPart) => {
+        (data: IPart) => {
           items.value = data;
           totalCount.value = items.value.length;
         },
@@ -146,44 +198,56 @@ export default defineComponent({
       );
     }
 
-    function handleUpdate() {
-      if (editedIndex.value === -1) {
-        const data = editedItem.value as IInventoryPart;
-        partService.createPart(data).then(
-          (data) => {
-            createSuccess(data);
-          },
-          (error) => {
-            createFailed();
-          }
-        );
-      } else {
-        PartService.updatePart(editedItem.value).then(
-          (data) => {
-            editSuccess(data);
-          },
-          (error) => {
-            console.log(error);
-            editFailed();
-          }
-        );
+    function fetchCategories() {
+      CategoryService.getCategories({}).then(
+        (data) => {
+          categories.value = data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
+
+    function setCategory(category: any) {
+      openCategoryDropdown.value = false;
+      editedItem.value.category = category.id;
+    }
+
+    function getCategoryNameFromId(id: number) {
+      const category = categories.value.find(
+        (category) => (category as ICategory).id === id
+      );
+      if (category !== undefined) {
+        return (category as ICategory).name;
       }
+      return "Categories";
     }
 
     onMounted(() => {
       fetchData({});
+      fetchCategories();
     });
 
     return {
-      items,
+      categories,
+      defaultItem,
       editedItem,
       editedIndex,
-      handleUpdate,
-      headers,
       editHeaders,
-      editItem,
-      defaultItem,
+      getCategoryNameFromId,
+      headers,
+      items,
+      openCategoryDropdown,
       saveButtonLabel,
+      setCategory,
+      startEditItem,
+      startDeleteItem,
+      processEditItem,
+      processDeleteItem,
+      deleteFunction,
+      createFunction,
+      editFunction,
     };
   },
 });
