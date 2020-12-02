@@ -1,6 +1,6 @@
 <template>
   <button
-    :class="`px-4 py-2 text-sm rounded-2xl focus:outline-none ${bgColor}`"
+    :class="`px-4 py-2 text-sm rounded-2xl focus:outline-none ${bgColor} transition duration-200`"
     v-bind="$attrs"
   >
     <slot>Button</slot>
