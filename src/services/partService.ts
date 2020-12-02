@@ -1,5 +1,6 @@
 import httpClient from "@/services/core/httpClient";
 import { IHttpRequest, IHttpResponse } from "@/services/core/interfase";
+import { IPart } from "@/types/inventory";
 
 // - TODO: add params for getParts() API
 
@@ -13,16 +14,16 @@ class PartService {
     return httpClient.request(axiosConfig);
   }
 
-  createPart(data: any): Promise<IHttpResponse> {
+  createPart(data: IPart): Promise<IPart> {
     const params: IHttpRequest<any> = {
       path: "/inventory/parts/",
       method: "post",
       data: data,
     };
-    return httpClient.request<IHttpResponse>(params);
+    return httpClient.request<IPart>(params);
   }
 
-  updatePart(data: any) {
+  updatePart(data: IPart): Promise<IPart> {
     const params: IHttpRequest<any> = {
       path: `/inventory/part/${data.id}/`,
       method: "put",
@@ -31,13 +32,13 @@ class PartService {
     return httpClient.request(params);
   }
 
-  deletePart(data: any): Promise<IHttpResponse> {
+  deletePart(data: IPart): Promise<IPart> {
     const params: IHttpRequest<any> = {
       path: `/inventory/part/${data.id}/`,
       method: "delete",
       data: data,
     };
-    return httpClient.request<IHttpResponse>(params);
+    return httpClient.request<IPart>(params);
   }
 }
 
