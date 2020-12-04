@@ -17,7 +17,7 @@
 
 - [ ] LabeledInput
 
-### useItems Composition API
+### useItemCrud Composition API
 
 Manage frontend item objects from composition API (CRUD)
 

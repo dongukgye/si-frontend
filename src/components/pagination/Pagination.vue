@@ -2,9 +2,7 @@
   <div class="flex items-center justify-end text-xs font-light text-gray-700">
     <div class="flex items-center">
       <!-- This example requires Tailwind CSS v2.0+ -->
-      <p class="mr-4">
-        페이지 당 건수
-      </p>
+      <p class="mr-4">페이지 당 건수</p>
 
       <!-- Page Size Dropdown -->
       <div class="relative inline-block text-left mr-4">
@@ -39,13 +37,11 @@
 
         <div
           v-show="openPageSizeDropdown"
-          :class="
-            `origin-top-right absolute right-0 bottom-0 mb-12 w-full rounded-md shadow-2xs bg-white ring-1 ring-black ring-opacity-5 transform transition ${
-              openPageSizeDropdown
-                ? `opacity-100 scale-100 ease-out duration-100`
-                : `opacity-0 scale-95 ease-in duration-75`
-            }`
-          "
+          :class="`origin-top-right absolute right-0 bottom-0 mb-12 w-full rounded-md shadow-2xs bg-white ring-1 ring-black ring-opacity-5 transform transition ${
+            openPageSizeDropdown
+              ? `opacity-100 scale-100 ease-out duration-100`
+              : `opacity-0 scale-95 ease-in duration-75`
+          }`"
         >
           <div
             class="py-1"
@@ -157,7 +153,7 @@ export default defineComponent({
 
     function setPageSize(size: number) {
       openPageSizeDropdown.value = false;
-      currentPage.value = 1
+      currentPage.value = 1;
       if (size === 0) {
         pageSize.value = totalCount.value;
       } else {
