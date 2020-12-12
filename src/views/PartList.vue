@@ -42,7 +42,16 @@
       </DataTable>
     </div>
     <Slider>
-      <template v-slot:header> This is custom header </template>
+      <template v-slot:header>
+        <div class="flex items-center justify-between">
+          <div>
+            This is custom header
+          </div>
+          <div>
+            <Button @click="createPartFromFile" text>파일로 추가</Button>
+          </div>
+        </div>
+      </template>
 
       <template v-slot:content>
         <div v-for="(header, i) in editHeaders" :key="i" class="my-2">
@@ -71,24 +80,38 @@
         </div>
       </template>
     </Slider>
+    <Modal>
+      <template v-slot:body>
+        <input
+          id="file-upload"
+          name="file-upload"
+          type="file"
+          @change="handleFileSelect"
+        />
+      </template>
+
+      <template v-slot:action>
+        <Button @click="handleFileUpload">Save</Button>
+      </template>
+    </Modal>
   </div>
 </template>
 
 <script lang="ts">
 import { ref, onMounted, defineComponent, computed } from "vue";
-import PartService from "@/services/partService";
+import { IPart, ICategory } from "@/types/inventory";
+import { useItemCrud } from "@/components/hooks/useItemCrud";
+import { useOpenState } from "@/components/hooks/useOpenState";
+import { usePagination } from "@/components/hooks/usePagination";
 import Title from "@/components/base/Title.vue";
 import DataTable from "@/components/table/DataTable.vue";
 import Slider from "@/components/slider/Slider.vue";
-import { useItemCrud } from "@/components/hooks/useItemCrud";
-import { usePagination } from "@/components/hooks/usePagination";
-import { IPart } from "@/types/inventory";
-import { ICategory } from "@/types/inventory";
 import partService from "@/services/partService";
 import CategoryService from "@/services/categoryService";
 import Button from "@/components/button/Button.vue";
 import Dropdown from "@/components/dropdown/Dropdown.vue";
 import Icon from "@/components/icon/Icon.vue";
+import Modal from "@/components/base/Modal.vue";
 import LabeledInput from "@/components/input/LabeledInput.vue";
 
 export default defineComponent({
@@ -97,6 +120,7 @@ export default defineComponent({
     DataTable,
     Dropdown,
     Icon,
+    Modal,
     Slider,
     Title,
     LabeledInput,
@@ -108,7 +132,9 @@ export default defineComponent({
     const createFunction = ref(partService.createPart);
     const editFunction = ref(partService.updatePart);
     const categories = ref([]);
+    const file = ref(new Blob());
     const { totalCount } = usePagination();
+    const { isOpenModal, isOpenSlider } = useOpenState();
     const {
       editedIndex,
       editedItem,
@@ -151,12 +177,12 @@ export default defineComponent({
     });
 
     function fetchData(params: any) {
-      PartService.getParts(params).then(
+      partService.getParts(params).then(
         (data: IPart) => {
           items.value = data;
           totalCount.value = items.value.length;
         },
-        (err) => {
+        (err: any) => {
           console.log(err);
         }
       );
@@ -188,6 +214,33 @@ export default defineComponent({
       return "Categories";
     }
 
+    function createPartFromFile() {
+      isOpenSlider.value = false;
+      isOpenModal.value = true;
+    }
+
+    function handleFileSelect(e: any) {
+      console.log(e.target.files[0]);
+      file.value = e.target.files[0];
+    }
+
+    function handleFileUpload() {
+      isOpenModal.value = false;
+      if (file.value) {
+        const formData = new FormData();
+        formData.append("file", file.value);
+
+        partService.createPartBulk(formData).then(
+          () => {
+            console.log("ok");
+          },
+          (err: any) => {
+            console.log(err);
+          }
+        );
+      }
+    }
+
     onMounted(() => {
       fetchData({});
       fetchCategories();
@@ -199,10 +252,15 @@ export default defineComponent({
       editedItem,
       editedIndex,
       editHeaders,
+      file,
       getCategoryNameFromId,
+      handleFileSelect,
+      handleFileUpload,
+      createPartFromFile,
       headers,
       icons,
       items,
+      isOpenModal,
       openCategoryDropdown,
       saveButtonLabel,
       setCategory,
