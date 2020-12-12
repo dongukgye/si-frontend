@@ -40,6 +40,17 @@ class PartService {
     };
     return httpClient.request<IPart>(params);
   }
+  
+  createPartBulk(data: any) {
+    const params: IHttpRequest<any> = {
+      path: `/inventory/parts/bulk/`,
+      method: "put",
+      data: data,
+    };
+    return httpClient.request(params);
+
+    // return axios.put(BASE_URL + `/parts/bulk/`, data)
+}
 }
 
 export default new PartService();
