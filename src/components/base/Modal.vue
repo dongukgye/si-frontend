@@ -19,7 +19,11 @@
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="isOpenModal" class="fixed inset-0 transition-opacity">
+        <div
+          v-if="isOpenModal"
+          class="fixed inset-0 transition-opacity"
+          @click="isOpenModal = false"
+        >
           <div class="absolute inset-0 bg-black opacity-50"></div>
         </div>
       </transition>
