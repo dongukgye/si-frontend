@@ -2,6 +2,14 @@
   <div>
     <Title title="Category List" />
     <DataTable :headers="headers" :data="items" selectable>
+      <template v-slot:col_name="{ item }">
+        <router-link :to="{ name: 'PartList', query: { category: item.id } }">
+        <span class="text-blue-700 hover:text-blue-500">
+          {{ item.name }}
+          </span>
+        </router-link>
+      </template>
+
       <template v-slot:col_category_status="{ item }">
         <div class="flex items-center">
           <div class="w-2 h-2 mx-2 bg-blue-300 rounded-full"></div>

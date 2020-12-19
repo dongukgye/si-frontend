@@ -113,6 +113,7 @@ import Dropdown from "@/components/dropdown/Dropdown.vue";
 import Icon from "@/components/icon/Icon.vue";
 import Modal from "@/components/base/Modal.vue";
 import LabeledInput from "@/components/input/LabeledInput.vue";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   components: {
@@ -126,6 +127,7 @@ export default defineComponent({
     LabeledInput,
   },
   setup() {
+    const route = useRoute()
     const icons = require("@/assets/icons.json");
     const openCategoryDropdown = ref(false);
     const deleteFunction = ref(partService.deletePart);
@@ -242,7 +244,8 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      fetchData({});
+      const query = route.query;
+      fetchData(query);
       fetchCategories();
     });
 
